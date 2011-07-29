@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python26
 
 #
 # Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
