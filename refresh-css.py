@@ -41,6 +41,7 @@ config = ConfigParser.ConfigParser()
 config.read("cssbot.cfg")
 
 # exec the css update.
+log.warn("forcing update of css")
 s = Stylesheet(config)
 s.generate_and_post()
 
