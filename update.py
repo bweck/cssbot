@@ -64,7 +64,7 @@ try:
       log.debug("have new solved? %s", has_solved)
       
       # update any css if dirty css
-      if force_css_update or expire_css_dirty or has_solved:
+      if expire_css_dirty or has_solved:
          s = Stylesheet(config)
          s.generate_and_post()
 except FileLockException as e:
