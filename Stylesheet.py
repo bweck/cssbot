@@ -99,12 +99,12 @@ class Stylesheet:
       #
       self.r.login(self.r_user, self.r_password)
 
-      current_css = self.r.get_stylesheet('cssbot') # self.r_sub
+      current_css = self.r.get_stylesheet(self.r_sub)
       self.log.info("current css\n %s", current_css)
 
       merged_css = self.merge_css(current_css, generated_css)
 
       self.log.info("updating css\n %s", merged_css)
-      self.r.save_stylesheet('cssbot', merged_css) # self.r_sub
+      self.r.save_stylesheet(self.r_sub, merged_css) 
 
 
