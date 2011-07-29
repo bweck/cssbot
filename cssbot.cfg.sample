@@ -1,0 +1,24 @@
+
+[mongo]
+db_name: r_tomt
+collection_posts: posts
+
+[reddit]
+; the subreddit to watch
+subreddit: tipofmytongue
+; the request throttle in seconds.
+; see: https://github.com/reddit/reddit/wiki/API
+;      In general, and especially for crawlers, make fewer than one request per two seconds
+throttle: 2.5
+; the user/password, login only occurs when updating css
+user: USERNAME
+password: PASSWORD
+
+[indexer]
+; max age of posts to keep track of in css
+; 12 hours = 43200
+; 1 day = 86400
+; 2 days = 172800
+; 3 days = 259200
+duration: 259200 
+
