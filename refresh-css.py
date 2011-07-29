@@ -6,6 +6,7 @@
 
 #
 import logging, sys, os, ConfigParser
+from datetime import date
 from Stylesheet import *
 
 # make the current working directory where ever the scripts are.
