@@ -43,30 +43,34 @@ log.addHandler(ch)
 #obtain a lock.
 with FileLock("update", timeout=2) as lock:
 
-   force_css_update = False
+   try:
+      force_css_update = False
 
-   # read the config file.
-   log.debug("loading config")
-   config = ConfigParser.ConfigParser()
-   config.read("cssbot.cfg")
+      # read the config file.
+      log.debug("loading config")
+      config = ConfigParser.ConfigParser()
+      config.read("cssbot.cfg")
 
-   #
-   i = Indexer(config)
-   c = Checker(config)
-   
-   # expire old
-   expire_css_dirty = i.expire()
-   log.debug("css dirty due to expiration? %s", expire_css_dirty)
-   
-   # index new 
-   i.index()
-   
-   # run the queue
-   has_solved = c.run()
-   log.debug("have new solved? %s", has_solved)
-   
-   # update any css if dirty css
-   if force_css_update or expire_css_dirty or has_solved:
-      s = Stylesheet(config)
-      s.generate_and_post()
+      #
+      i = Indexer(config)
+      c = Checker(config)
+      
+      # expire old
+      expire_css_dirty = i.expire()
+      log.debug("css dirty due to expiration? %s", expire_css_dirty)
+      
+      # index new 
+      i.index()
+      
+      # run the queue
+      has_solved = c.run()
+      log.debug("have new solved? %s", has_solved)
+      
+      # update any css if dirty css
+      if force_css_update or expire_css_dirty or has_solved:
+         s = Stylesheet(config)
+         s.generate_and_post()
+   except FileLockException as e:
+      log.warn("unable to obtain lock, another process probably executing")
+
 
