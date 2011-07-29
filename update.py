@@ -41,11 +41,8 @@ log.addHandler(ch)
 
 
 #obtain a lock.
-with FileLock("update", timeout=2) as lock:
-
-   try:
-      force_css_update = False
-
+try:
+   with FileLock("update", timeout=2) as lock:
       # read the config file.
       log.debug("loading config")
       config = ConfigParser.ConfigParser()
@@ -70,7 +67,7 @@ with FileLock("update", timeout=2) as lock:
       if force_css_update or expire_css_dirty or has_solved:
          s = Stylesheet(config)
          s.generate_and_post()
-   except FileLockException as e:
-      log.warn("unable to obtain lock, another process probably executing")
+except FileLockException as e:
+   log.warn("unable to obtain lock, another process probably executing")
 
 
