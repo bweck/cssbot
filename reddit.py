@@ -55,15 +55,17 @@ class Reddit:
    retry_delay_sec = 15
 
    #
-   def __init__(self, config):
+   def __init__(self, config=None):
       self.log = logging.getLogger('cssbot.reddit')
-      self.throttle = config.getfloat("reddit", "throttle")
 
-      if config.get('reddit', 'num_retries'):
-         self.num_retries = config.getint('reddit', 'num_retries')
+      if config:
+         self.throttle = config.getfloat("reddit", "throttle")
 
-      if config.get('reddit', 'retry_delay_sec'):
-         self.retry_delay_sec = config.getfloat('reddit', 'retry_delay_sec')
+         if config.get('reddit', 'num_retries'):
+            self.num_retries = config.getint('reddit', 'num_retries')
+
+         if config.get('reddit', 'retry_delay_sec'):
+            self.retry_delay_sec = config.getfloat('reddit', 'retry_delay_sec')
       
       # now we have to install our CookieJar so that it is used as the default CookieProcessor in the default opener handler
       if cj != None:                                  
