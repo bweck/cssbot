@@ -145,6 +145,7 @@ class Reddit:
             self.log.debug("open uri: %s", uri)
             req = Request(uri, params)
             handle = urlopen(req)
+            self.log.debug("response headers\n%s" % handle.info())
             data = handle.read()
             self.log.debug(handle.info().headers)
             self.last_request_time = now
