@@ -92,10 +92,10 @@ class Indexer:
 
    # remove this thing by id from the index.
    def remove(self, thing_id):
-      if not thing:
+      if not thing_id:
          return False
 
-      log.info("removing from index id=%s" % thing_id)
+      self.log.info("removing from index id=%s" % thing_id)
 
       # FIXME: handle errors, safe=, etc.
       return self.collection.remove({'id':thing_id})
