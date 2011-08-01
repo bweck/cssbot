@@ -7,6 +7,7 @@
 import pymongo, time, logging
 import reddit
 from Indexer import *
+import simplejson
 
 class Checker:
    #
