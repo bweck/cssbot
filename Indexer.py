@@ -90,6 +90,17 @@ class Indexer:
          p = self.collection.find().sort('created_utc', pymongo.DESCENDING).limit(1).next()
          self.index_since(p['name'])
 
+   # remove this thing by id from the index.
+   def remove(self, thing_id):
+      if not thing:
+         return False
+
+      log.info("removing from index id=%s" % thing_id)
+
+      # FIXME: handle errors, safe=, etc.
+      return self.collection.remove({'id':thing_id})
+
+
    # remove any posts older than duration.
    def expire(self):
       self.log.debug("expire()")

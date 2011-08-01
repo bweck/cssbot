@@ -6,12 +6,14 @@
 
 import pymongo, time, logging
 import reddit
+from Indexer import *
 
 class Checker:
    #
    MODS = ['surfwax95', 'RoboBama', 'bitterend']
    MAGIC_WORDS = ['solved'] #, 'found']
    #
+   config = None
    mongo = None
    db = None
    collection = None
@@ -22,6 +24,7 @@ class Checker:
    #
    #
    def __init__(self, config):
+      self.config = config
       self.log = logging.getLogger('cssbot.Checker')
       self.mongo = pymongo.Connection()
       self.db = self.mongo[config.get("mongo", "db_name")]
@@ -129,6 +132,12 @@ class Checker:
          # get the latest copy of the thread
          resp = self.r.get_comments( rec['id'] )
          #print simplejson.dumps(resp, sort_keys=True, indent=3)
+
+         # has the post been deleted?
+         if resp[0]['data']['children'][0]['author'] == '[deleted]':
+            Indexer index = Indexer(config)
+            index.remove(rec['id'])
+
          #  check for solved/unsolved
          if self._walk_ds(rec, resp[0]) or self._walk_ds(rec, resp[1]):
             self.log.info("id:%s SOLVED", rec['id'])
