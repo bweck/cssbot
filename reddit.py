@@ -138,7 +138,7 @@ class Reddit:
             time.sleep(duration)
       #
       attempts = 1
-      while attempts <= num_retries:
+      while attempts <= self.num_retries:
          try:
             self.log.debug("open uri: %s", uri)
             req = Request(uri, params)
@@ -151,7 +151,7 @@ class Reddit:
             if hasattr(e, 'code'):
                self.log.warn('We failed with error code - %s.', e.code)
             #
-            if attempts > num_retries:
+            if attempts > self.num_retries:
                self.log.error('attempt to open uri %s failed %d times, exiting.' % (uri, attempts))
                # alternatively, re-throw the error to catch at a higher level.
                sys.exit(1)
