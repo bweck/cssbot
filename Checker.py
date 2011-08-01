@@ -131,12 +131,13 @@ class Checker:
 
          # get the latest copy of the thread
          resp = self.r.get_comments( rec['id'] )
-         #print simplejson.dumps(resp, sort_keys=True, indent=3)
+         self.log.debug("data=%s" % simplejson.dumps(resp, sort_keys=True, indent=3))
 
          # has the post been deleted?
          if resp[0]['data']['children'][0]['data']['author'] == '[deleted]':
-            index = Indexer(config)
+            index = Indexer(self.config)
             index.remove(rec['id'])
+            continue
 
          #  check for solved/unsolved
          if self._walk_ds(rec, resp[0]) or self._walk_ds(rec, resp[1]):
