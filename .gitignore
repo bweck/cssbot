@@ -1,2 +1,3 @@
 log/cssbot-*.log
 *.pyc
+cssbot.cfg
