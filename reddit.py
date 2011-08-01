@@ -146,6 +146,7 @@ class Reddit:
             req = Request(uri, params)
             handle = urlopen(req)
             data = handle.read()
+            self.log.debug(handle.info().headers)
             self.last_request_time = now
             return data
          except IOError, e:
