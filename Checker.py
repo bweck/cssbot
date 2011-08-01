@@ -134,7 +134,7 @@ class Checker:
          #print simplejson.dumps(resp, sort_keys=True, indent=3)
 
          # has the post been deleted?
-         if resp[0]['data']['children'][0]['author'] == '[deleted]':
+         if resp[0]['data']['children'][0]['data']['author'] == '[deleted]':
             index = Indexer(config)
             index.remove(rec['id'])
 
