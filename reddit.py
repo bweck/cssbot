@@ -63,7 +63,7 @@ class Reddit:
          num_retries = config.getint('reddit', 'num_retries')
 
       if config.get('reddit', 'retry_delay_sec'):
-         num_retries = config.getFloat('reddit', 'retry_delay_sec')
+         num_retries = config.getfloat('reddit', 'retry_delay_sec')
       
       # now we have to install our CookieJar so that it is used as the default CookieProcessor in the default opener handler
       if cj != None:                                  
