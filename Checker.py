@@ -135,7 +135,7 @@ class Checker:
 
          # has the post been deleted?
          if resp[0]['data']['children'][0]['author'] == '[deleted]':
-            Indexer index = Indexer(config)
+            index = Indexer(config)
             index.remove(rec['id'])
 
          #  check for solved/unsolved

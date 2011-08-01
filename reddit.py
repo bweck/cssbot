@@ -60,7 +60,7 @@ class Reddit:
       self.throttle = config.getfloat("reddit", "throttle")
 
       if config.get('reddit', 'num_retries'):
-         num_retries = config.getInt('reddit', 'num_retries')
+         num_retries = config.getint('reddit', 'num_retries')
 
       if config.get('reddit', 'retry_delay_sec'):
          num_retries = config.getFloat('reddit', 'retry_delay_sec')
