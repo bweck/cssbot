@@ -9,9 +9,11 @@ import sys
 import simplejson
 import reddit
 
-fetch_id = sys.argv[1]
-if not fetch_id:
+if len(sys.argv) != 2:
    print "usage: %s id" % sys.argv[0]
+   sys.exit(0)
+
+fetch_id = sys.argv[1]
 
 r = reddit.Reddit()
 x = r.get_comments(fetch_id)
