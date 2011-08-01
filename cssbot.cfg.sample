@@ -13,6 +13,9 @@ throttle: 2.5
 ; the user/password, login only occurs when updating css
 user: USERNAME
 password: PASSWORD
+; retry / retry delay
+num_retries: 3
+retry_delay_sec: 15
 
 [indexer]
 ; max age of posts to keep track of in css

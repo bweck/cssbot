@@ -51,11 +51,19 @@ class Reddit:
    throttle = 2.5
    last_request_time = None
    log = None
+   num_retries = 3
+   retry_delay_sec = 15
 
    #
    def __init__(self, config):
       self.log = logging.getLogger('cssbot.reddit')
       self.throttle = config.getfloat("reddit", "throttle")
+
+      if config.get('reddit', 'num_retries'):
+         num_retries = config.getInt('reddit', 'num_retries')
+
+      if config.get('reddit', 'retry_delay_sec'):
+         num_retries = config.getFloat('reddit', 'retry_delay_sec')
       
       # now we have to install our CookieJar so that it is used as the default CookieProcessor in the default opener handler
       if cj != None:                                  
@@ -129,18 +137,27 @@ class Reddit:
             self.log.debug("delaying %s seconds until next request", duration)
             time.sleep(duration)
       #
-      try:
-         self.log.debug("open uri: %s", uri)
-         req = Request(uri, params)
-         handle = urlopen(req)
-         data = handle.read()
-         self.last_request_time = now
-         return data
-      except IOError, e:
-         self.log.error("failed to open uri: %s", uri)
-         if hasattr(e, 'code'):
-            self.log.error('We failed with error code - %s.', e.code)
-         sys.exit(1)
+      attempts = 1
+      while attempts <= num_retries:
+         try:
+            self.log.debug("open uri: %s", uri)
+            req = Request(uri, params)
+            handle = urlopen(req)
+            data = handle.read()
+            self.last_request_time = now
+            return data
+         except IOError, e:
+            self.log.warn("failed to open uri: %s", uri)
+            if hasattr(e, 'code'):
+               self.log.warn('We failed with error code - %s.', e.code)
+            #
+            if attempts > num_retries:
+               self.log.error('attempt to open uri %s failed %d times, exiting.' % (uri, attempts))
+               # alternatively, re-throw the error to catch at a higher level.
+               sys.exit(1)
+            #
+            attempts += 1
+            time.sleep(retry_delay_sec)
 
 
    def get_stylesheet(self, sub):
