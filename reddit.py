@@ -165,6 +165,11 @@ class Reddit:
 
    def get_stylesheet(self, sub):
       contents = self.make_request('http://www.reddit.com/r/%s/about/stylesheet' % sub)
+
+      if not contents:
+         self.log.error("could not get a current copy of the css, exiting")
+         sys.exit(1)
+      
       p = re.compile('<textarea rows="20" cols="20" id="stylesheet_contents" name="stylesheet_contents" >(.*?)</textarea>')
       m = p.search(contents)
       css = m.group(1)
