@@ -10,7 +10,6 @@ import utils
 from cssbot import log, config, style
 
 #
-utils.dirs.switch_cwd_to_script_loc()
 log = log.getLogger("cssbot")
 
 #

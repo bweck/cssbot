@@ -6,6 +6,7 @@
 
 import logging
 from datetime import date
+import utils
 
 def __configure_logging():
    # configure the base logger for the pkg
@@ -37,4 +38,5 @@ def getLogger(name=None):
    return logging.getLogger(name)
 
 #
+utils.dirs.switch_cwd_to_script_loc()
 __configure_logging()

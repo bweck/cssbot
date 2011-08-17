@@ -12,7 +12,6 @@ from cssbot import process
 from cssbot import style
 
 #
-utils.dirs.switch_cwd_to_script_loc()
 log = log.getLogger("cssbot")
 
 #
