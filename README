@@ -1,0 +1,14 @@
+
+a bot that was built to originally watch posts on reddit.com/r/tipofmytongue/ for entries marked as solved.
+
+Requires:
+for the db store - mongodb - mongodb.org
+python 2.6
+python modules - simplejson and pymongo
+
+Install:
+1. copy cssbot.cfg.sample to cssbot.cfg
+2. edit cssbot.cfg
+3. from the cron, run update.py every minute or few.
+
+

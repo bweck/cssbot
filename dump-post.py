@@ -1,21 +1,19 @@
-#!/usr/bin/env python26
+#!/usr/bin/env python2.6
 
 #
+# Copyright (C) 2011 by Brian Weck
 # Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 #
 
 #
-import sys
-import simplejson
-import reddit
+import utils
+from cssbot import reddit
 
-if len(sys.argv) != 2:
-   print "usage: %s id" % sys.argv[0]
-   sys.exit(0)
+utils.usage(1, "usage: %s id")
+fetch_id = utils.argv(1)
 
-fetch_id = sys.argv[1]
-
-r = reddit.Reddit()
+r = reddit.APIWrapper()
+r.num_retries = 0
 x = r.get_comments(fetch_id)
-print simplejson.dumps(x, sort_keys=True, indent=3)
+print utils.format_json(x)
 

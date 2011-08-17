@@ -1,73 +1,52 @@
-#!/usr/bin/env python26
+#!/usr/bin/env python2.6
 
 #
+# Copyright (C) 2011 by Brian Weck
 # Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 #
 
+import utils
+from cssbot import log, config
+from cssbot import index 
+from cssbot import process
+from cssbot import style
+
 #
-import logging, sys, os
-from datetime import date
-from FileLock import FileLock, FileLockException
-import ConfigParser
-from Indexer import *
-from Checker import *
-from Stylesheet import *
+log = log.getLogger("cssbot")
 
+#
+utils.dirs.switch_cwd_to_script_loc()
 
-# make the current working directory where ever the scripts are.
-abspath = os.path.abspath(sys.argv[0])
-dname = os.path.dirname(abspath)
-os.chdir(dname)
-
-# create base logger
-log = logging.getLogger('cssbot')
-log.setLevel(logging.DEBUG)
-# create file handler which logs even debug messages
-today = date.today()
-#log_date = "%d%02d%02d" % (today.year, today.month, today.day)
-log_date = "%d%02d" % (today.year, today.month)
-fh = logging.FileHandler('log/cssbot-%s.log' % log_date)
-fh.setLevel(logging.INFO)
-# create console handler with a higher log level
-ch = logging.StreamHandler()
-ch.setLevel(logging.ERROR)
-# create formatter and add it to the handlers
-formatter = logging.Formatter('%(asctime)s : [%(levelname)s] %(name)s : %(message)s')
-fh.setFormatter(formatter)
-ch.setFormatter(formatter)
-# add the handlers to the logger
-log.addHandler(fh)
-log.addHandler(ch)
-
-
-#obtain a lock.
+#
+subreddits = config.getList("cssbot", "subreddits")
 try:
-   with FileLock("update", timeout=2) as lock:
-      # read the config file.
-      log.debug("loading config")
-      config = ConfigParser.ConfigParser()
-      config.read("cssbot.cfg")
+   with utils.FileLock("update", timeout=2) as lock:
+      log.debug("got lock")
 
-      #
-      i = Indexer(config)
-      c = Checker(config)
-      
-      # expire old
-      expire_css_dirty = i.expire()
-      log.debug("css dirty due to expiration? %s", expire_css_dirty)
-      
-      # index new 
-      i.index()
-      
-      # run the queue
-      has_solved = c.run()
-      log.debug("have new solved? %s", has_solved)
-      
-      # update any css if dirty css
-      if expire_css_dirty or has_solved:
-         s = Stylesheet(config)
-         s.generate_and_post()
-except FileLockException as e:
-   log.warn("unable to obtain lock, another process probably executing")
+      for subreddit in subreddits:
+         # get configured values for the subreddit
+         maxage = config.getInt(subreddit, "maxage")
+         words = config.getList(subreddit, "words")
+         moderators = config.getList(subreddit, "moderators")
+         selector = config.get(subreddit, "style_selector")
+         rule = config.get(subreddit, "style_rule")
 
+         # setup.
+         expunge = index.Expunge(subreddit, maxage)
+         index = index.Indexer(subreddit, maxage)
+         matcher = process.Matcher(subreddit, words, moderators)
+
+         # process.
+         expunge.old() 
+         index.new()
+         matcher.run()
+
+         # update the css?
+         if expunge.is_dirty() or matcher.is_dirty():
+            stylesheet = style.Stylesheet(subreddit, selector, rule)
+            stylesheet.generate_and_save()
+
+except utils.FileLockException as e:
+   log.warn("unable to obtain lock, probable cause is another process executing")
+      
 

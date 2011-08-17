@@ -1,27 +1,30 @@
 
+[cssbot]
+; for every subreddit listed here there needs to be a section below with further params
+subreddits: sub1,sub2
+
 [mongo]
-db_name: r_tomt
-collection_posts: posts
+uri: cssbot ;or mongodb://localhost:27017/cssbot
+collection: threads
 
 [reddit]
-; the subreddit to watch
-subreddit: tipofmytongue
-; the request throttle in seconds.
-; see: https://github.com/reddit/reddit/wiki/API
-;      In general, and especially for crawlers, make fewer than one request per two seconds
-throttle: 2.5
-; the user/password, login only occurs when updating css
-user: USERNAME
-password: PASSWORD
-; retry / retry delay
+throttle: 3
 num_retries: 3
 retry_delay_sec: 15
+user: USERNAME
+password: PASSWORD
 
-[indexer]
-; max age of posts to keep track of in css
-; 12 hours = 43200
-; 1 day = 86400
-; 2 days = 172800
-; 3 days = 259200
-duration: 259200 
+[sub1]
+maxage: 259200  ; 3 days
+words: solved,found
+moderators: alice,bob,charlie
+style_selector: a.title:before
+style_rule: { content: url(%%%%tick%%%%); background-position: 0px 0px; display: inline-block; padding: 2px; }
+
+[sub2]
+maxage: 86400 ; 1 day
+words: completed,thank you,woohoo,finished
+moderators: dave
+style_selector: a.title:link
+style_rule: { color: green }
 

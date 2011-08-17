@@ -1,39 +1,45 @@
-#!/usr/bin/env python26
+#!/usr/bin/env python2.6
 
 #
 # Licensed under the MIT license: http://www.opensource.org/licenses/mit-license.php
 #
 
-import sys, time, ConfigParser
-import pymongo
 
-# read in config.
-config = ConfigParser.ConfigParser()
-config.read("cssbot.cfg")
+import time, os
+from datetime import timedelta 
 
-# setup db connection
-mongo = pymongo.Connection()
-db = mongo[config.get("mongo", "db_name")]
-collection = db[config.get("mongo", "collection_posts")]
+from cssbot import log, queue
+import utils
 
-# spin.
-try:
-   for thread in collection.find({'solved':'N'}).sort('next_check', pymongo.ASCENDING):
-      now = time.time()
-      when = thread['next_check']
-      if when < now:
-         when = "+"
-      elif when < (now+60):
-         when = "%ds" % ((when-now))
-      elif when < (now+3600):
-         when = "%dm" % ((when-now)/60)
-      elif when < (now+86400):
-         when = "%.1fh" % ((when-now)/3600)
-      else:
-         when = "%.1fd" % ((when-now)/86400)
 
-      print "%s\t%s\t%s" % (when, thread['id'], (thread['title']).replace('\n', ' '))
-except IOError, e:
-   sys.exit()
+def humanize_time(secs): 
+   #
+   if secs < 0:
+      return "+"
+   # no need for millis.
+   secs = int(secs)
+   d = timedelta(seconds=secs) 
+   return str(d)
 
+
+#
+log = log.getLogger("cssbot")
+utils.dirs.switch_cwd_to_script_loc()
+
+#
+now = time.time()
+queue = queue.Queue()
+for item in queue.items():
+   #
+   rows, cols = os.popen('stty size', 'r').read().split()
+   cols = int(cols)
+   #
+   # left_padding_len is the length of all the preceding text + paddings.
+   left_padding_len = 52
+   if len(item["data"]["title"]) > (cols-left_padding_len):
+      title = "%s..." % (item["data"]["title"]).replace("\n", " ")[:(cols-left_padding_len-3)]
+   else:
+      title = "%s" % (item["data"]["title"]).replace("\n", " ")
+
+   print "%-15s   %s in r/%-20s   %s" % (humanize_time(item["next_ts"]-now), item["data"]["id"], item["data"]["subreddit"], title)
 
