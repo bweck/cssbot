@@ -103,7 +103,7 @@ class Stylesheet:
       # get a list of matched thing names.
       matched_names = []
       matched_snippet = []
-      for thing in self.queue.find({"data.matched":"Y"}):
+      for thing in self.queue.find({"data.matched":"Y", "data.subreddit":self.subreddit}):
          name = thing["data"]["name"]
          matched_names.append(name)
          matched_snippet.append( ".id-%s %s" % (name, self.selector) )
