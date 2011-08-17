@@ -17,10 +17,10 @@ def __configure_logging():
    formatter = logging.Formatter("%(asctime)s : [%(levelname)s] %(name)s : %(message)s")
 
    # stdout handler.
-   ch = logging.StreamHandler()
-   ch.setLevel(logging.WARN)
-   ch.setFormatter(formatter)
-   l.addHandler(ch)
+#   ch = logging.StreamHandler()
+#   ch.setLevel(logging.WARN)
+#   ch.setFormatter(formatter)
+#   l.addHandler(ch)
 
    # file handler
    today = date.today()
