@@ -10,8 +10,8 @@ import utils
 from cssbot import log, config, style
 
 #
-log = log.getLogger("cssbot")
 utils.dirs.switch_cwd_to_script_loc()
+log = log.getLogger("cssbot")
 
 #
 subreddits = config.getList("cssbot", "subreddits")

@@ -14,9 +14,8 @@ utils.usage(1, "usage: %s id")
 thing_id = utils.argv(1)
 
 #
-log = log.getLogger("cssbot.dequeue")
 utils.dirs.switch_cwd_to_script_loc()
-
+log = log.getLogger("cssbot.dequeue")
 
 #
 queue = queue.Queue()

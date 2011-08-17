@@ -23,8 +23,8 @@ def humanize_time(secs):
 
 
 #
-log = log.getLogger("cssbot")
 utils.dirs.switch_cwd_to_script_loc()
+log = log.getLogger("cssbot")
 
 #
 now = time.time()
