@@ -17,8 +17,7 @@ def __configure_logging():
 
    # stdout handler.
    ch = logging.StreamHandler()
-   #ch.setLevel(logging.DEBUG)
-   ch.setLevel(logging.INFO)
+   ch.setLevel(logging.WARN)
    ch.setFormatter(formatter)
    l.addHandler(ch)
 
@@ -26,7 +25,7 @@ def __configure_logging():
    today = date.today()
    log_date = "%d%02d" % (today.year, today.month) #"%d%02d%02d" % (today.year, today.month, today.day)
    fh = logging.FileHandler("log/cssbot-%s.log" % log_date)
-   fh.setLevel(logging.DEBUG)
+   fh.setLevel(logging.INFO)
    fh.setFormatter(formatter)
    l.addHandler(fh)
 
